@@ -13,48 +13,40 @@
 </head>
 <body>
 <div class="container">
-	<h2>부서수정</h2>
-	<form:form modelAttribute="dept">
+	<h2>직원수정</h2>
+	<form:form modelAttribute="emp">
 		<div class="form-group">
 			<label>ID</label>
-			<div>${dept.id}</div>
+			<div>${emp.id}</div>
 		</div>
 		<div class="form-group">
-			<label>부서명</label>
+			<label>직원명</label>
 			<form:input path="name" cssClass="form-group" placeholder="2자 이상 "  cssErrorClass="form-control errorField" />
 			<form:errors path="name" element="label" cssClass="error" /><br>
+			
+			
+			<label>부서명</label>
+			<form:select path="dept"  items="${depts}" itemLabel="name" itemValue="id" />
+				
+			<form:errors path="dept" element="label" cssClass="error" /><br>
+			<br> 
+			
+			
+			<button type="submit" class="btn btn-primary">수정</button>
+			<a href="/emp/${emp.id}/delete">
+				<button type="button" class="btn btn-warning">삭제</button> 
+			</a>
+			<button type="button" class="btn btn-danger" onclick="deleteemp(${emp.id})">삭제 이벤트</button>
 		</div>
-		<div class="form-group">
-			<label>나이</label>
-			<form:select path="age">
-				<form:option value="30" label="30" />
-				<form:option value="40" label="40" />
-				<form:option value="50" label="50" />
-			</form:select>
-		</div>
-		<div class="form-group">
-			<label>Level</label>
-			<form:select path="level">
-				<%-- <form:option value="30" label="30" />
-				<form:option value="40" label="40" />
-				<form:option value="50" label="50" /> --%>
-				<form:options items="${levels}" itemValue="value" itemLabel="label" />
-			</form:select>
-		</div>
-		<button type="submit" class="btn btn-primary">수정</button>
-		<a href="/dept/${dept.id}/delete">
-			<button type="button" class="btn btn-warning">삭제</button> 
-		</a>
-		<button type="button" class="btn btn-danger" onclick="deleteDept(${dept.id})">삭제 이벤트</button>
 	</form:form>
 
 <script>
-	function deleteDept(deptid){
-		console.log(deptid);
+	function deleteemp(empid){
+		console.log(empid);
 		// 스택오버플로우 참고 : http://stackoverflow.com/questions/6964927/how-to-create-a-form-dynamically-via-javascript
 		var f = document.createElement("form");
 		f.setAttribute('method',"post");
-		f.setAttribute('action', "/dept/"+deptid+"/delete");
+		f.setAttribute('action', "/emp/"+empid+"/delete");
 		alert("폼 전송 전 서브밋 합니다~콘솔 창 미리 띄워두고 확인해보세요~");
 		f.submit();
 	}

@@ -1,4 +1,6 @@
-package demo;
+package demo.controller;
+
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -11,52 +13,63 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@Controller
-@RequestMapping("/dept")
-public class DeptFormController {
+import demo.domain.Dept;
+import demo.domain.Emp;
+import demo.repository.DeptRepository;
+import demo.repository.EmpRepository;
 
+@Controller
+@RequestMapping("/emp")
+public class EmpFormController {
+	
+	@Autowired EmpRepository empRepository;
 	@Autowired DeptRepository deptRepository;
 	
+	@ModelAttribute("depts")
+	public List<Dept> getDepts(){
+		return deptRepository.findAll();
+	}
+	
+	
 	@RequestMapping(value="/add", method=RequestMethod.GET)
-	public String addForm(@ModelAttribute Dept dept){
-		return "deptadd";
+	public String addForm(@ModelAttribute Emp emp){
+		return "empadd";
 	}
 	
 	@RequestMapping(value="/add", method=RequestMethod.POST)
-	public String addSubmit(@ModelAttribute @Valid Dept dept, BindingResult errors){
-		if(dept.getName()!=null && dept.getName().length() < 2 ){
+	public String addSubmit(@ModelAttribute @Valid Emp emp, BindingResult errors){
+		if(emp.getName()!=null && emp.getName().length() < 2 ){
 			errors.rejectValue("name", null, "필수항목입니다.");
 		}
-		if(errors.hasErrors()) return "deptadd";
-		deptRepository.save(dept);
-		return "redirect:../dept"; //신기함
+		if(errors.hasErrors()) return "empadd";
+		System.out.println("직원 정보 "+emp);
+		empRepository.save(emp);
+		return "redirect:../emp"; //신기함
 	}
 	
 	@RequestMapping(value="/{id}/edit", method=RequestMethod.GET)
 	public String editForm(@PathVariable Long id, Model model){
-		Dept d  = deptRepository.findOne(id);
-		model.addAttribute("dept", d);
-		return "deptedit";
+		Emp d  = empRepository.findOne(id);
+		model.addAttribute("emp", d);
+		return "empedit";
 	}
 	
 	@RequestMapping(value="/{id}/edit", method=RequestMethod.POST)
 	public String editSubmit(@PathVariable Long id, 
-							@ModelAttribute @Valid Dept dept, BindingResult errors ){
+							@ModelAttribute @Valid Emp emp, BindingResult errors ){
 		
-		if(dept.getName()!=null && dept.getName().length() < 2 ){
+		if(emp.getName()!=null && emp.getName().length() < 2 ){
 			errors.rejectValue("name", null, "필수항목입니다.");
 		}
-		if(errors.hasErrors()) return "deptedit";
-		deptRepository.save(dept);
-		return "redirect:../../dept";
+		if(errors.hasErrors()) return "empedit";
+		empRepository.save(emp);
+		return "redirect:../../emp";
 	}
 	
 	@RequestMapping("/{id}/delete")
 	public String delete(@PathVariable Long id){
-		deptRepository.delete(id);
-		return "redirect:../../dept";
+		empRepository.delete(id);
+		return "redirect:../../emp";
 	}
-	
-	
-	
+
 }

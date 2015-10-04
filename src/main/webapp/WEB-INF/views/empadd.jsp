@@ -13,23 +13,23 @@
 </head>
 <body>
 <div class="container">
-	<h2>부서등록</h2>
-	<form:form modelAttribute="dept">
+	<h2>직원등록</h2>
+	<form:form modelAttribute="emp">
 		<div class="form-group">
-			<label>부서명</label>
+			<label>직원명</label>
 			<form:input path="name" cssClass="form-group" placeholder="2자 이상 "  cssErrorClass="form-control errorField" />
 			<form:errors path="name" element="label" cssClass="error" /><br>
+			
+			 
+			
+			
 		</div>
 		<div class="form-group">
-			<label>Level</label>
-			<form:select path="level">
-				<%-- <form:option value="30" label="30" />
-				<form:option value="40" label="40" />
-				<form:option value="50" label="50" /> --%>
-				<form:options items="${levels}" itemValue="value" itemLabel="label" />
-			</form:select>
+			<label>부서명</label>
+			<form:select path="dept" items="${depts }" itemValue="id" itemLabel="name" />
+			<form:errors path="dept" element="label" cssClass="error" /><br>
+			<br>
 		</div>
-		
 		<button type="submit" class="btn btn-primary">등록</button>
 	</form:form>
 

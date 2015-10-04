@@ -8,26 +8,26 @@
 </head>
 <body>
 	<div class="container">
-		<h2>부서 정보</h2>
+		<h2>직원 정보</h2>
 		
 		<div class="btn-group">
-			<a href="dept/add"><button class="btn btn-primary" type="button">부서등록</button></a>
+			<a href="emp/add"><button class="btn btn-primary" type="button">직원 등록</button></a>
 		</div>
 		
-		<table id="depts" class="table table-boardered table-hover">
+		<table id="emps" class="table table-boardered table-hover">
 			<thead>
 				<tr>
 					<th>ID</th>
-					<th>부서명</th>
-					<th>레벨</th>
+					<th>직원명</th>
+					<th>부서</th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="d" items="${depts}">
+				<c:forEach var="e" items="${emps}">
 					<tr>
-						<td>${d.id }</td>
-						<td><a href="dept/${d.id}/edit">${d.name }</a></td>
-						<td>${d.level.label}</td>
+						<td>${e.id }</td>
+						<td><a href="emp/${e.id}/edit">${e.name }</a></td>
+						<td>${e.dept.name }</td>
 					</tr>
 				</c:forEach>
 			</tbody>
