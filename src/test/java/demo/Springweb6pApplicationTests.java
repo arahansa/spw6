@@ -1,39 +1,90 @@
 package demo;
 
+import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MockMvcBuilder;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import demo.controller.HelloController;
+import demo.controller.HelloController.User;
+import lombok.Data;
+
+
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes=Springweb6pApplication.class)
+@WebAppConfiguration
 public class Springweb6pApplicationTests {
-
+	
+	@Autowired
+	private WebApplicationContext wac;
+	
+	@Autowired 
+	private ObjectMapper objectMapper;
+	
+	private MockMvc mockMvc;
+	
 	@Before
-	public void setUp() {
-		System.out.println("셋업");
+	public void setup(){
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 	
 	@Test
-	public void contextLoads() {
-		System.out.println("3번째");
+	public void hello() throws Exception {
+		mockMvc.perform(get("/hello?name=May"))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(content().string("getMay"));
+		
+		mockMvc.perform(post("/hello").param("name", "May"))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(content().string("postMay"));
+		
+		User user = new User();
+		user.setName("May");
+		user.setAge(10);
+		
+		mockMvc.perform(post("/helloUser")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(user)))
+			.andDo(print())
+			.andExpect(status().isOk())
+			//.andExpect(header().string("authKey", "hm?"))
+			//.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.name").value("May"))
+			.andExpect(jsonPath("$.age").value(10))
+			;
+			//.andExpect(content().string("postMay"));
+			
 	}
+	
+	@Test
+	public void depts() throws Exception {
+		mockMvc.perform(get("/depts"))
+			.andDo(print());
+	}
+	
+	
+	
+	
 
-	@Test
-	public void b_test() {
-		System.out.println("2번째");
-	}
-
-	@Test
-	public void a_test(){
-		System.out.println("1번째~ ");
-	}
-	@Test
-	public void a_atest(){
-		System.out.println("01번째~ ");
-	}
+	
 
 }
