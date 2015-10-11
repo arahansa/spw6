@@ -30,6 +30,7 @@ public class Springweb6pApplication {
         	
         	Emp e = new Emp();
         	e.setName("직원"+ i);
+        	e.setDept(d);
         	er.save(e);
         }
         
