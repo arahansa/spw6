@@ -23,6 +23,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import demo.controller.HelloController;
 import demo.controller.HelloController.User;
+import demo.domain.Dept;
+import demo.domain.Emp;
+import demo.repository.DeptRepository;
+import demo.repository.EmpRepository;
 import lombok.Data;
 
 
@@ -40,9 +44,27 @@ public class Springweb6pApplicationTests {
 	
 	private MockMvc mockMvc;
 	
+	@Autowired DeptRepository deptRepository;
+	@Autowired EmpRepository empRepository;
+	
 	@Before
 	public void setup(){
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		
+		empRepository.deleteAll();
+    	deptRepository.deleteAll();
+    	
+        
+        for(int i=1;i<=15;i++){
+        	Dept d = new Dept();
+        	d.setName("IT"+i);
+        	deptRepository.save(d);
+        	
+        	Emp e = new Emp();
+        	e.setName("직원"+ i);
+        	e.setDept(d);
+        	empRepository.save(e);
+        }
 	}
 	
 	@Test
@@ -81,10 +103,11 @@ public class Springweb6pApplicationTests {
 			.andDo(print());
 	}
 	
-	
-	
-	
+	@Test
+	public void emps() throws Exception {
+		mockMvc.perform(get("/emps"))
+			.andDo(print());
+	}
 
-	
 
 }
